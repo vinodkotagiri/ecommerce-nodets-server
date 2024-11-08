@@ -1,0 +1,192 @@
+openapi: 3.0.3
+info:
+  title: Swagger Petstore
+  version: 1.0.0
+  description: A simple petstore for testing purposes
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: http://localhost:4009/api/v1
+  description: Development server
+components:
+  schemas:
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          example: 5gk6H@example.com
+          description: The email of the user
+        password:
+          type: string
+          example: thisisapassword
+          description: The password of the user
+    Signup:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: John
+          description: The first name of the user
+        lastName:
+          type: string
+          example: Doe
+          description: The last name of the user
+        email:
+          type: string
+          example: 5gk6H@example.com
+          description: The email of the user
+        password:
+          type: string
+          example: thisisapassword
+          description: The password of the user
+        userType:
+          type: string
+          example: customer
+          description: The user type of the user
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "609bda89e4b0f1e23c8a4510"
+        firstName:
+          type: string
+          example: "John"
+          description: "First name of the user"
+        lastName:
+          type: string
+          example: "Doe"
+          description: "Last name of the user"
+        email:
+          type: string
+          example: "john.doe@example.com"
+          description: "Email address of the user"
+        password:
+          type: string
+          description: "User's password"
+        userType:
+          type: string
+          enum: ["customer", "admin", "vendor"]
+          default: "customer"
+          description: "Type of the user"
+        emailVerified:
+          type: boolean
+          default: false
+          description: "Indicates if the user's email is verified"
+        phoneVerified:
+          type: boolean
+          default: false
+          description: "Indicates if the user's phone number is verified"
+        phone:
+          type: string
+          nullable: true
+          example: "+123456789"
+          description: "User's phone number"
+        emailVerificationCode:
+          type: string
+          nullable: true
+          description: "Code sent for email verification"
+        phoneVerificationCode:
+          type: string
+          nullable: true
+          description: "Code sent for phone verification"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2023-11-07T12:34:56Z"
+          description: "Date and time when the user was created"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2023-11-07T12:34:56Z"
+          description: "Date and time when the user was last updated"
+    LoginResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+          description: "The authenticated user's details"
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          description: "JWT token for authenticating the user"
+      required:
+        - user
+        - token
+    AuthErrorResponse:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          description: Custom error code
+          enum: [901, 902, 903, 904, 905]
+          example: 905
+        message:
+          type: string
+          description: Error message corresponding to the error code
+          example: "Invalid credentials"
+      required:
+        - errorCode
+        - message
+
+  examples:
+    UserAlreadyExists:
+      summary: User already exists
+      value:
+        errorCode: 901
+        message: "User already exists"
+    PasswordTooWeak:
+      summary: Password is too weak
+      value:
+        errorCode: 902
+        message: "Password is too weak"
+    InvalidEmail:
+      summary: Invalid email
+      value:
+        errorCode: 903
+        message: "Invalid email"
+    UserNotFound:
+      summary: User not found
+      value:
+        errorCode: 904
+        message: "User not found"
+    InvalidCredentials:
+      summary: Invalid credentials
+      value:
+        errorCode: 905
+        message: "Invalid credentials"
+paths:
+  /auth/login:
+    post:
+      tags:
+      - Auth
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        200:
+         description: User logged in successfully
+         content: 
+           application/json:
+             schema:
+               $ref: '#/components/schemas/LoginResponse'
+        400:
+          description: Login failed with validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+
+
+
+
+
+
+
+
